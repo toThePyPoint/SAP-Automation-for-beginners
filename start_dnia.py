@@ -1,3 +1,5 @@
+import time
+
 import win32com.client
 import sys
 
@@ -25,13 +27,28 @@ try:
     #  🔽 Od tego momentu zaczyna się faktyczna interakcja z SAP GUI:
 
     session.findById("wnd[0]").maximize()
-    session.findById("wnd[0]/tbar[0]/okcd").text = "/nmd04"
+    session.findById("wnd[0]/tbar[0]/okcd").text = "/ncohv"
     session.findById("wnd[0]").sendVKey(0)
-    session.findById("wnd[0]/usr/tabsTAB300/tabpF01/ssubINCLUDE300:SAPMM61R:0301/ctxtRM61R-MATNR").text = "991111"
-    session.findById("wnd[0]/usr/tabsTAB300/tabpF01/ssubINCLUDE300:SAPMM61R:0301/ctxtRM61R-WERKS").text = "2101"
-    session.findById("wnd[0]/usr/tabsTAB300/tabpF01/ssubINCLUDE300:SAPMM61R:0301/ctxtRM61R-WERKS").setFocus()
-    session.findById("wnd[0]/usr/tabsTAB300/tabpF01/ssubINCLUDE300:SAPMM61R:0301/ctxtRM61R-WERKS").caretPosition = 4
-    session.findById("wnd[0]").sendVKey(0)
+    session.findById("wnd[0]").sendVKey(17)  # CTRL + F5
+    session.findById("wnd[1]/usr/txtV-LOW").text = "PLAN_LU_ZRI"
+    session.findById("wnd[1]/usr/txtENAME-LOW").text = ""  # Wyczyszczenie pola z nazwą użytkownika
+    session.findById("wnd[1]").sendVKey(0)
+    session.findById("wnd[1]").sendVKey(8)
+    session.findById("wnd[0]").sendVKey(8)
+
+    session.createSession()  # "Nowe okno GUI"
+    time.sleep(1)  # Tutaj dodajemy 1s pauzę w programie, aby nowe okno "zdążyło się uruchomić"
+
+    session2 = connection.Children(1)
+
+    session2.findById("wnd[0]/tbar[0]/okcd").text = "/ncohv"
+    session2.findById("wnd[0]").sendVKey(0)
+    session2.findById("wnd[0]").sendVKey(17)  # CTRL + F5
+    session2.findById("wnd[1]/usr/txtV-LOW").text = "PLAN_LU_ZAR"
+    session2.findById("wnd[1]/usr/txtENAME-LOW").text = ""  # Wyczyszczenie pola z nazwą użytkownika
+    session2.findById("wnd[1]").sendVKey(0)
+    session2.findById("wnd[1]").sendVKey(8)
+    session2.findById("wnd[0]").sendVKey(8)
 
 except Exception as e:
     print(f"Wystąpił błąd: {e}")
