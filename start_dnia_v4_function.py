@@ -3,6 +3,7 @@ import time
 import win32com.client
 import sys
 
+czas_start = time.time()
 try:
     # Pobranie uruchomionej aplikacji SAP GUI
     SapGuiAuto = win32com.client.GetObject("SAPGUI")
@@ -27,12 +28,13 @@ try:
     # ---------------------------------------------------------------
     #  🔽 Od tego momentu zaczyna się faktyczna interakcja z SAP GUI:
 
-    def otworz_transakcje(numer_sesji, nazwa_transakcji, nazwa_wariantu):
+    def otworz_transakcje_i_wczytaj_wariant(numer_sesji, nazwa_transakcji, nazwa_wariantu):
+        print(f"{(time.time() - czas_start):.2f}s: Wczytuję transakcję wariant {nazwa_wariantu} w transakcji {nazwa_transakcji} w oknie: {numer_sesji}")
         session = connection.Children(numer_sesji)
         session.findById("wnd[0]").maximize()
-        session.findById("wnd[0]/tbar[0]/okcd").text = nazwa_transakcji  # w ten sposób pobieramy wartość przypisaną do klucza 'transakcja'
+        session.findById("wnd[0]/tbar[0]/okcd").text = nazwa_transakcji
         session.findById("wnd[0]").sendVKey(0)
-        if slownik['wariant']:
+        if nazwa_wariantu:
             # Program zrealizuje poniższe linie tylko, jeśli użytkownik podał jakiś wariant
             session.findById("wnd[0]").sendVKey(17)  # CTRL + F5
             session.findById("wnd[1]/usr/txtV-LOW").text = nazwa_wariantu  # podajemy nazwę wariantu
@@ -44,22 +46,32 @@ try:
 
     # === TWOJA KONFIGURACJA ===
     # Wpisz tutaj transakcje i warianty, które chcesz uruchomić
+    # zadania_do_uruchomienia = [
+    #     {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZRI'},  # Słownik dla okna nr 1
+    #     {'transakcja': 'MD04', 'wariant': None},  # Słownik dla okna nr 2
+    #     {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},  # Słownik dla okna nr 3
+    #     # Możesz dodać więcej!
+    # ]
     zadania_do_uruchomienia = [
-        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZRI'},  # Słownik dla okna nr 1
-        {'transakcja': 'MD04', 'wariant': None},  # Słownik dla okna nr 2
-        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},  # Słownik dla okna nr 3
-        # Możesz dodać więcej!
+        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
+        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
+        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
+        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
+        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
+        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
     ]
 
     numer_okna = 0
 
     for slownik in zadania_do_uruchomienia:
 
+        # w ten sposób pobieramy wartości przypisane do kluczy: 'transakcja' oraz 'wariant'
+        # a następnie przypisujemy je do zmiennych wariant oraz transakcja, które będą argumentami do naszej funkcji
         wariant = slownik['wariant']
         transakcja = slownik['transakcja']
 
         # Wywołujemy funkcję, która realizuje operacje, które wcześniej mnieliśmy w pętli
-        otworz_transakcje(numer_sesji=numer_okna, nazwa_transakcji=transakcja, nazwa_wariantu=wariant)
+        otworz_transakcje_i_wczytaj_wariant(numer_sesji=numer_okna, nazwa_transakcji=transakcja, nazwa_wariantu=wariant)
 
         if numer_okna < len(zadania_do_uruchomienia) - 1:
             # Po ostatnim oknie nie tworzymy nowej sesji
@@ -77,3 +89,5 @@ finally:
     connection = None
     application = None
     SapGuiAuto = None
+
+print(f"Czas wykonywania skryptu w podejściu sekwencyjnym: {(time.time() - czas_start):.2f}")
