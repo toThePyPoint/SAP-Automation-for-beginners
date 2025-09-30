@@ -4,6 +4,11 @@ import subprocess
 import win32com.client
 
 
+# Podajemy lokalizację, w której zainstalowany jest system SAP
+# Wykorzystujemy ją w funkcji `otworz_sap`
+SAP_PATH = r"C:\Program Files (x86)\SAP\FrontEnd\SAPgui\saplogon.exe"
+
+
 class NazwySystemowSAP:
     """
     Klasa przechowująca nazwy systemów SAP, z którymi możemy się połączyć.
@@ -18,7 +23,7 @@ def otworz_sap():
     """
     Uruchamia program SAP Logon, jeśli znajduje się w domyślnej lokalizacji.
     """
-    sciezka_do_sap_gui = r"C:\Program Files (x86)\SAP\FrontEnd\SAPgui\saplogon.exe"
+    sciezka_do_sap_gui = SAP_PATH
 
     if os.path.exists(sciezka_do_sap_gui):
         # Uruchomienie SAP GUI
@@ -35,7 +40,7 @@ def zaloguj_do_sap(system_sap):
     Łączy się z wybranym systemem SAP za pomocą SAP GUI Scripting.
 
     Parametry:
-    system_sap (str): Nazwa systemu SAP (zgodna z SAP Logon, np. "P11 Single Sign-On [ERP PRD]")
+    system_sap (str): Nazwa systemu SAP (zgodna z SAP Logon")
 
     Zwraca:
     connection: Obiekt połączenia z systemem SAP

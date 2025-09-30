@@ -2,12 +2,9 @@ import time
 import multiprocessing  # importujemy niezbędną bibliotekę
 import win32com.client
 
-czas_start = time.time()
 
-
-def otworz_transakcje_i_wczytaj_wariant(numer_sesji, nazwa_transakcji, nazwa_wariantu, start):
+def otworz_transakcje_i_wczytaj_wariant(numer_sesji, nazwa_transakcji, nazwa_wariantu):
     # Inicjalizacja COM w nowym procesie
-    print(f"{(time.time() - start):.2f}s: Wczytuję transakcję wariant {nazwa_wariantu} w transakcji {nazwa_transakcji} w oknie: {numer_sesji}")
     SapGuiAuto = win32com.client.GetObject("SAPGUI")
     application = SapGuiAuto.GetScriptingEngine
     connection = application.Children(0)
@@ -53,7 +50,7 @@ if __name__ == "__main__":
         # Tworzymy nowy proces, który uruchomi daną transakcję w osobnym oknie SAP
         proces = multiprocessing.Process(
             target=otworz_transakcje_i_wczytaj_wariant,
-            args=(numer_okna, transakcja, wariant, czas_start)
+            args=(numer_okna, transakcja, wariant)
         )
         procesy.append(proces)  # Dodajemy proces do listy, by później móc na niego zaczekać
         proces.start()  # Uruchamiamy proces (czyli otwieranie i konfigurację okna)
@@ -67,4 +64,3 @@ if __name__ == "__main__":
     for proces in procesy:
         proces.join()
 
-    print(f"Czas wykonywania skryptu w podejściu multiprocessing: {(time.time() - czas_start):.2f}")
