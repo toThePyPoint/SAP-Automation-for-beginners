@@ -7,8 +7,7 @@ import os
 
 
 class NazwySystemowSAP:
-    SYSTEM_P11 = "P11 Single Sign-On [ERP PRD]"
-    SYSTEM_K11 = "K11 [ERP QAS]"
+    SYSTEM_PRD = "P11 SSO [ERP PRD]"
 
 
 def otworz_sap():
@@ -64,7 +63,7 @@ if __name__ == "__main__":
 
     # Tutaj otwieramy SAP-a i logujemy się do systemu
     otworz_sap()
-    zaloguj_do_sap(NazwySystemowSAP.SYSTEM_P11)
+    zaloguj_do_sap(NazwySystemowSAP.SYSTEM_PRD)
 
     # Inicjalizacja COM w procesie głównym
     SapGuiAuto = win32com.client.GetObject("SAPGUI")
@@ -74,10 +73,6 @@ if __name__ == "__main__":
 
     # === TWOJA KONFIGURACJA ===
     zadania_do_uruchomienia = [
-        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
-        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
-        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
-        {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
         {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
         {'transakcja': 'COHV', 'wariant': 'PLAN_LU_ZAR'},
     ]
@@ -106,4 +101,3 @@ if __name__ == "__main__":
     for proces in procesy:
         proces.join()
 
-    print(f"Czas wykonywania skryptu w podejściu multiprocessing: {(time.time() - czas_start):.2f}")
