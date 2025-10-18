@@ -13,7 +13,7 @@ class NazwySystemowSAP:
 
 def otworz_sap():
     # Ścieżka do pliku wykonywalnego SAP GUI (np. saplogon.exe)
-    sciezka_do_sap_gui = r"C:\Program Files\SAP\FrontEnd\SAPGUI\saplogon.exe"
+    sciezka_do_sap_gui = r"C:\Program Files (x86)\SAP\FrontEnd\SAPgui\saplogon.exe"
 
     # Sprawdzenie, czy plik istnieje
     if os.path.exists(sciezka_do_sap_gui):
